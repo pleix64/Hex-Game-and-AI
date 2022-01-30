@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <algorithm>
+#include <string>
+#include <sstream>
 //#include <functional>
 #include "HexBoard.hpp"
 
@@ -24,9 +26,10 @@ ostream& operator<<(ostream& out, const COLOR& color) {
     return out;
 }
 
-HexBoard::HexBoard(int side): N(side),V(side*side) {
+HexBoard::HexBoard(int size): N(size),V(size*size) {
     col = vector<COLOR>(V,COLOR::WHITE);
-    adj = new map<int,COLOR>[V];
+    adj = new set<int>[V];
+    //adj = new map<int,COLOR>[V];
     for(int i=0; i<V; ++i) {
         int x = getX(i);
         int y = getY(i);
@@ -57,11 +60,11 @@ bool HexBoard::adjacent(int i, int j) {
 }
 
 
-void HexBoard::player_move(COLOR player, int x, int y) {
+int HexBoard::player_move(COLOR player, int x, int y) {
     if(player==COLOR::WHITE) {
         cout << "Player's color must be "
         "either COLOR::RED or COLOR::BLUE." << endl;
-        return;
+        return 2;
     }
     int i = getNode(x, y);
     // legal move
@@ -69,18 +72,18 @@ void HexBoard::player_move(COLOR player, int x, int y) {
         col[i] = player;
     else {
         cout << "Illegal move. \nPlease select an available location.\n";
-        return;
+        return 1;
     }
     
     // if neighbor is already with the same color
     // change the edge to this neighbor as the player's color
     // FIXME: it may turn out that no need for edge COLOR
-    for(auto it=adj[i].begin(); it!=adj[i].end(); ++it) {
-        if(col[it->first]==player) {
-            it->second = player;
-            adj[it->first][i] = player;
-        }
-    }
+    //for(auto it=adj[i].begin(); it!=adj[i].end(); ++it) {
+    //    if(col[it->first]==player) {
+    //        it->second = player;
+    //        adj[it->first][i] = player;
+    //    }
+    //}
         
     // add this hexagon to player's open set
     int dist;
@@ -89,50 +92,50 @@ void HexBoard::player_move(COLOR player, int x, int y) {
     else if(player==COLOR::BLUE)
         dist = getY(i);
     open[player].insert(make_pair(dist, i));
+    
+    return 0;
 }
 
-bool HexBoard::player_won(COLOR& player) {
+bool HexBoard::player_won(COLOR player) {
     bool won = false;
-    for(auto p:{COLOR::RED, COLOR::BLUE}){
-        //add player owned nodes on North Side (RED) or West Side (BLUE)
-        for(auto it=open[p].begin(); it!=open[p].end(); ) {
-            if(it->first==0) {
-                closed[p].insert(it->second);
-                it = open[p].erase(it);
-            }
-            else
-                break;
+    // move player owned nodes (in open set) with coordinate 0
+    // (x=0 for RED; y=0 for BLUE) to its closed set
+    for(auto it=open[player].begin(); it!=open[player].end(); ) {
+        if(it->first==0) {
+            closed[player].insert(it->second);
+            it = open[player].erase(it);
         }
-        // move open set elements which are closed set elements' neighbors
-        // to closed set
-        auto it=open[p].begin();
-        while(it!=open[p].end()) {
-            //find_if(closed[p].begin(),closed[p].end(),
-            //        bind(adjacent(_1, it->second)));
-            auto it_adj =
-            find_if(closed[p].begin(),closed[p].end(),
-                    [&](int x) {return this->adjacent(x, it->second);});
-            if(it_adj!=closed[p].end()) {
-                closed[p].insert(it->second);
-                it = open[p].erase(it);
-            }
-            else
-                ++it;
-        }
-        // test whether one of players won
-        set<int>::iterator it_farside;
-        if(p==COLOR::RED)
-            it_farside = find_if(closed[p].begin(),closed[p].end(),
-                                 [&](int i){return this->getX(i)==N-1;});
-        else if(p==COLOR::BLUE)
-            it_farside = find_if(closed[p].begin(),closed[p].end(),
-                                 [&](int i){return this->getY(i)==N-1;});
-        
-        if(it_farside!=closed[p].end()) {
-            won = true;
-            player = p;
-        }
+        else
+            break;
     }
+    // move open set elements which are closed set elements' neighbors
+    // to closed set
+    auto it=open[player].begin();
+    while(it!=open[player].end()) {
+        //find_if(closed[player].begin(),closed[player].end(),
+        //        bind(adjacent(_1, it->second)));
+        auto it_adj =
+        find_if(closed[player].begin(),closed[player].end(),
+                [&](int x) {return this->adjacent(x, it->second);});
+        if(it_adj!=closed[player].end()) {
+            closed[player].insert(it->second);
+            it = open[player].erase(it);
+        }
+        else
+            ++it;
+    }
+    // player won if find any node with x=N-1 for RED
+    // or y=N-1 for BLUE in closed set
+    set<int>::iterator it_farside;
+    if(player==COLOR::RED)
+        it_farside = find_if(closed[player].begin(),closed[player].end(),
+                            [&](int i){return this->getX(i)==N-1;});
+    else if(player==COLOR::BLUE)
+        it_farside = find_if(closed[player].begin(),closed[player].end(),
+                            [&](int i){return this->getY(i)==N-1;});
+    
+    if(it_farside!=closed[player].end())
+        won = true;
     
     return won;
 }
@@ -142,11 +145,50 @@ void HexBoard::print() {
     for (int i = 0; i < V; ++i) {
         cout << i << ": ";
         for (auto it = adj[i].begin(); it != adj[i].end(); ++it) {
-            cout << it->first;
-            if(it->second!=COLOR::WHITE)
-                cout << "(" << it->second << ")";
+            cout << (*it);
+            if(col[*it]!=COLOR::WHITE)
+                cout << "(" << col[*it] << ")";
+            //cout << it->first;
+            //if(it->second!=COLOR::WHITE)
+            //    cout << "(" << it->second << ")";
             cout << ", ";
         }
         cout << endl;
     }
+}
+
+void HexBoard::draw() {
+    string ws("  ");
+    // print y numbers
+    cout << " ";
+    for(int y=0; y<N; y++) {
+        cout << y << "   ";
+    }
+    cout << "\n";
+    for(int x=0; x<N; x++) {
+        for (int u=0;u<x;u++) cout << ws;
+        cout << x;
+        for(int y=0; y<N; y++) {
+            int node = getNode(x, y);
+            if(col[node]==COLOR::WHITE)
+                cout << " . ";
+            else if(col[node]==COLOR::RED)
+                cout << " X ";
+            else if(col[node]==COLOR::BLUE)
+                cout << " O ";
+            if(y!=N-1) cout << "-";
+        }
+        cout << "\n";
+        if (x!=N-1) {
+            cout << "   ";
+            for (int u=0;u<x;u++) cout << ws;
+            cout << "\\ ";
+            for(int y=0; y<N-1; y++) {
+                cout << "/ \\ ";
+            }
+            cout << "\n";
+        }
+     
+    }
+    
 }

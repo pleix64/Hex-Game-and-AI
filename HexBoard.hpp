@@ -10,7 +10,7 @@ Coordinate convention in this program:
      \
       \
        X
- N: side length
+ N: board size
  V: number of nodes, V = N*N
  i is used as index of a node
    ******************************************* */
@@ -34,7 +34,7 @@ ostream& operator<<(ostream& out, const COLOR& color);
 
 class HexBoard {
 public:
-    HexBoard(int side);
+    HexBoard(int size);
     
     ~HexBoard();
     
@@ -55,28 +55,33 @@ public:
         // make sure the new neighbor is not outside the board
         // if it's out of the range, nothing is added.
         if(x>=0 && x<N && y>=0 && y<N)
-             adj[i].insert(make_pair(getNode(x,y),COLOR::WHITE));
+            adj[i].insert(getNode(x, y));
+             //adj[i].insert(make_pair(getNode(x,y),COLOR::WHITE));
     }
     
     bool adjacent(int i, int j);
     // test whether there is an edge from node i to node j
     
-    void player_move(COLOR player, int x, int y);
+    int player_move(COLOR player, int x, int y);
     // assign the hexagon (x,y) with COLOR player (RED or BLUE)
     // ensure it is a legal move (not already occupied and in board range)
     // change edge color accordingly if neighbor nodes have the same color
+    // return 0 for legal move; 1 for illegal move; 2 for WHITE color.
     
-    bool player_won(COLOR& player);
-    // return true is one of the players won the game,
-    // and assign winner's COLOR to player
+    bool player_won(COLOR player);
+    // test whether player won
+    // call every time after this player moved
     
     void print();
     
+    void draw();
+    
 private:
-    int N; // side length
+    int N; // board size
     int V; // number of nodes
     vector<COLOR> col; // node values of COLOR
-    map<int,COLOR> * adj; // adjancency list, edge value is COLOR
+    set<int> *adj; // adjancency list, no weight or color value needed. 
+    //map<int,COLOR> * adj; // adjancency list, edge value is COLOR
     map<COLOR,set<pair<int,int> > > open; // each player's open set
     // each element in open set is a pair of node index (second)
     // and its distance to North or West Side (first)
