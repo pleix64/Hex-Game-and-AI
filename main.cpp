@@ -17,8 +17,7 @@ int main(int argc, const char * argv[]) {
     // test of game flow with drawing 
     GamePlay gp;
     gp.initialize();
-    //gp.game_flow();
-    gp.game_flow_HvC();
+    gp.game_flow();
     
     /* test for board basic, legal move, and winning judgement
     HexBoard HB(5);

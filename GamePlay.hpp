@@ -43,9 +43,6 @@ public:
     
     void generate_move(int&x, int&y);
     
-    void game_flow_HvC();
-    // FIXME: for prototyping only, will incorporate into general game_flow
-    
 private:
     COLOR current_turn;
     vector<int> turns; // num of turns for RED and BLUE respectively

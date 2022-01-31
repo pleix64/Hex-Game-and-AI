@@ -70,10 +70,8 @@ int HexBoard::player_move(COLOR player, int x, int y) {
     // legal move
     if(x>=0 && x<N && y>=0 && y<N && col[i]==COLOR::WHITE)
         col[i] = player;
-    else {
-        cout << "Illegal move. \nPlease select an available location.\n";
+    else 
         return 1;
-    }
     
     // if neighbor is already with the same color
     // change the edge to this neighbor as the player's color
@@ -159,12 +157,13 @@ void HexBoard::print() {
 
 void HexBoard::draw() {
     string ws("  ");
-    // print y numbers
+
     cout << " ";
     for(int y=0; y<N; y++) {
         cout << y << "   ";
     }
     cout << "\n";
+    
     for(int x=0; x<N; x++) {
         for (int u=0;u<x;u++) cout << ws;
         cout << x;
@@ -179,6 +178,7 @@ void HexBoard::draw() {
             if(y!=N-1) cout << "-";
         }
         cout << "\n";
+        
         if (x!=N-1) {
             cout << "   ";
             for (int u=0;u<x;u++) cout << ws;

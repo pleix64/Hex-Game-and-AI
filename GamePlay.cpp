@@ -14,13 +14,13 @@ using namespace std;
 void GamePlay::initialize() {
     // enter data from keyboard
     board_size = 11;
-    cout << "Welcome to HexBoard! \n";
+    cout << "Welcome to Hex! \n";
     cout << "Enter board size (press enter for default value 11): ";
     if(cin.peek()!='\n')
         cin >> board_size;
     // FIXME: need to learn cin.ignore() in detail
     // Right now, OK for just press enter,
-    // but doesn't work in case of entering white spaces and enter
+    // but doesn't work in case of entering whitespaces then enter key
     // Then, found cin.ignore is needed to ensure the next entered content
     // won't be treated as Enter Key
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -75,26 +75,74 @@ void GamePlay::initialize() {
     hex->draw();
 }
 
-// testing
-void GamePlay::game_flow_HvC() {
+void GamePlay::game_flow() {
+    // control game flow according to settngs (game_mode and human_player)
+    // basic loop:
+    // if human, enter a hexagon coordinate from keyboard
+    // if computer, generate a reasonable move
+    // make a move, and check its validity
+    // check if current player has won
+    // draw the Hex board
+    // take_turns();
+    
+    bool P1_is_human = false, P2_is_human = false;
+    if(game_mode==1) {
+        if(human_player==1) {
+            P1_is_human = true;
+            P2_is_human = false;
+        }
+        else {
+            P1_is_human = false;
+            P2_is_human = true;
+        }
+    }
+    else if(game_mode==2) {
+        P1_is_human = P2_is_human = true;
+    }
+    else if(game_mode==3) {
+        P1_is_human = P2_is_human = false;
+    }
+    else
+        cout << "Error: wrong game mode. This message should never be printed.\n";
+
     bool won = false;
     COLOR winner;
     while(!won) {
-        // case of keyboard input:
+        // determine whether wait for keyboard input or generate from AI
+        bool human_play_now = false;
+        if(current_turn==COLOR::RED) {
+            if(P1_is_human)
+                human_play_now = true;
+            else
+                human_play_now = false;
+        }
+        else if (current_turn==COLOR::BLUE) {
+            if(P2_is_human)
+                human_play_now = true;
+            else
+                human_play_now = false;
+        }
+        
         bool valid_input = true;
         do{
+            // keyboard input for human player,
+            // or move generator for computer player
             int x,y;
-            if(current_turn==COLOR::RED) {
-                cout << "Player 1, Enter your move (x y):";
+            if(human_play_now){
+                cout << "Player " << int(current_turn) << ", Enter your move (x y):";
                 cin >> x >> y;
             }
             else {
-                cout << "Player 2 move:\n";
+                if(valid_input)
+                    cout << "Player " << int(current_turn) << " move:\n";
                 generate_move(x, y);
             }
-
-            if(hex->player_move(current_turn, x, y))
+            // validate the move
+            if(hex->player_move(current_turn, x, y)) {
                 valid_input = false;
+                if(human_play_now)
+                    cout << "Illegal move. \nPlease select an available location.\n";
+            }
             else
                 valid_input = true;
         }while(!valid_input);
@@ -105,6 +153,7 @@ void GamePlay::game_flow_HvC() {
             turns[0]++;
         else
             turns[1]++;
+        
         hex->draw();
         take_turns();
     }
@@ -112,52 +161,6 @@ void GamePlay::game_flow_HvC() {
     cout << "Winner is " << winner << ".\n";
     cout << "Total turns: " << (turns[0]+turns[1]);
     cout << " (RED " << turns[0] << ", BLUE " << turns[1] << ").\n";
-}
-
-void GamePlay::game_flow() {
-    // control game flow according to settngs (game_mode and human_player)
-    // basic loop:
-    // if human, enter a hexagon coordinate from keyboard
-    // if computer, generate a reasonable move
-    // hex->player_move(current_turn, x, y);
-    // if(hex->player_won(current_turn) ...;
-    // take_turns();
-
-    bool won = false;
-    COLOR winner;
-    while(!won) {
-        // determine whether wait for keyboard input or generate from AI
-        // FIXME: write this later
-        
-        // case of keyboard input:
-        bool valid_input = true;
-        do{
-            if(current_turn==COLOR::RED)
-                cout << "Player 1, Enter your move (x y):";
-            else
-                cout << "Player 2, Enter your move (x y):";
-            int x,y;
-            cin >> x >> y;
-            if(hex->player_move(current_turn, x, y))
-                valid_input = false;
-            else
-                valid_input = true;
-        }while(!valid_input);
-        
-        won = hex->player_won(current_turn);
-        if(won) winner = current_turn;
-        if(current_turn==COLOR::RED)
-            turns[0]++;
-        else
-            turns[1]++;
-        take_turns();
-    }
-    
-    cout << "Winner is " << winner << ".\n";
-    cout << "Total turns: " << (turns[0]+turns[1]);
-    cout << " (RED " << turns[0] << ", BLUE " << turns[1] << ").\n";
-    
-    hex->print();
     
 }
 

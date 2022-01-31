@@ -28,7 +28,7 @@ Coordinate convention in this program:
 
 using namespace std;
 
-enum class COLOR: short {WHITE, RED, BLUE};
+enum class COLOR: short {WHITE=0, RED, BLUE};
 
 ostream& operator<<(ostream& out, const COLOR& color);
 
