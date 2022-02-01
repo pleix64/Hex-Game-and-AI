@@ -25,10 +25,10 @@ public:
     }
     void initialize();
     void take_turns() {
-        if(current_turn==COLOR::RED)
-            current_turn = COLOR::BLUE;
-        else if(current_turn==COLOR::BLUE)
+        if(current_turn==COLOR::BLUE)
             current_turn = COLOR::RED;
+        else if(current_turn==COLOR::RED)
+            current_turn = COLOR::BLUE;
         else
             cout << "Error: current_turn is not properly initialized." << endl;
     }
@@ -45,7 +45,7 @@ public:
     
 private:
     COLOR current_turn;
-    vector<int> turns; // num of turns for RED and BLUE respectively
+    vector<int> turns; // num of turns for BLUE and RED respectively
     HexBoard * hex; // HexBoard that GamePlay talks to
     
     int board_size;

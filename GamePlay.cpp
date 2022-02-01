@@ -44,7 +44,7 @@ void GamePlay::initialize() {
     //cout << "test: game mode is set to " << game_mode << endl;
     
     human_player = 1;
-    cout << "Player 1 (RED) goes first, then Player 2 (BLUE).\n";
+    cout << "Player 1 (BLUE) goes first, then Player 2 (RED).\n";
     if(game_mode==1) { // H vs C
         cout << "Choose your player (enter 1 or 2):";
         if(cin.peek()!='\n')
@@ -60,9 +60,9 @@ void GamePlay::initialize() {
     
     if(game_mode==1) {
         if(human_player==1)
-            cout << "You play RED and go first.\n";
+            cout << "You play BLUE and go first.\n";
         else
-            cout << "You play BLUE. Computer goes first.\n";
+            cout << "You play RED. Computer goes first.\n";
     }
     else if(game_mode==2)
         cout << "Two human players take turns.\n";
@@ -71,7 +71,7 @@ void GamePlay::initialize() {
     
     // set up game
     hex = new HexBoard(board_size);
-    current_turn = COLOR::RED;
+    current_turn = COLOR::BLUE;
     hex->draw();
 }
 
@@ -110,13 +110,13 @@ void GamePlay::game_flow() {
     while(!won) {
         // determine whether wait for keyboard input or generate from AI
         bool human_play_now = false;
-        if(current_turn==COLOR::RED) {
+        if(current_turn==COLOR::BLUE) {
             if(P1_is_human)
                 human_play_now = true;
             else
                 human_play_now = false;
         }
-        else if (current_turn==COLOR::BLUE) {
+        else if (current_turn==COLOR::RED) {
             if(P2_is_human)
                 human_play_now = true;
             else
@@ -149,7 +149,7 @@ void GamePlay::game_flow() {
         
         won = hex->player_won(current_turn);
         if(won) winner = current_turn;
-        if(current_turn==COLOR::RED)
+        if(current_turn==COLOR::BLUE)
             turns[0]++;
         else
             turns[1]++;
@@ -160,7 +160,7 @@ void GamePlay::game_flow() {
     
     cout << "Winner is " << winner << ".\n";
     cout << "Total turns: " << (turns[0]+turns[1]);
-    cout << " (RED " << turns[0] << ", BLUE " << turns[1] << ").\n";
+    cout << " (BLUE " << turns[0] << ", RED " << turns[1] << ").\n";
     
 }
 

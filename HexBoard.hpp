@@ -28,7 +28,7 @@ Coordinate convention in this program:
 
 using namespace std;
 
-enum class COLOR: short {WHITE=0, RED, BLUE};
+enum class COLOR{WHITE=0, BLUE, RED};
 
 ostream& operator<<(ostream& out, const COLOR& color);
 
@@ -63,7 +63,7 @@ public:
     // test whether there is an edge from node i to node j
     
     int player_move(COLOR player, int x, int y);
-    // assign the hexagon (x,y) with COLOR player (RED or BLUE)
+    // assign the hexagon (x,y) with COLOR player (BLUE or RED)
     // ensure it is a legal move (not already occupied and in board range)
     // change edge color accordingly if neighbor nodes have the same color
     // return 0 for legal move; 1 for illegal move; 2 for WHITE color.
@@ -87,7 +87,7 @@ private:
     // and its distance to North or West Side (first)
     // once a hexagon is occupied, first add it to player's open set
     map<COLOR,set<int>> closed; // each player's closed set
-    // 1. add player owned nodes on North Side (RED) or West Side (BLUE),
+    // 1. add player owned nodes on North Side (BLUE) or West Side (RED),
     // 2. move open set elements which are closed set elements' neighbors
     //    to closed set
 };

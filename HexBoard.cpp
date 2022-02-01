@@ -17,10 +17,10 @@ using namespace std;
 //using namespace std::placeholders;
 
 ostream& operator<<(ostream& out, const COLOR& color) {
-    if(color==COLOR::RED)
-        out << "RED";
-    else if(color==COLOR::BLUE)
+    if(color==COLOR::BLUE)
         out << "BLUE";
+    else if(color==COLOR::RED)
+        out << "RED";
     else
         out << "WHIHE";
     return out;
@@ -63,7 +63,7 @@ bool HexBoard::adjacent(int i, int j) {
 int HexBoard::player_move(COLOR player, int x, int y) {
     if(player==COLOR::WHITE) {
         cout << "Player's color must be "
-        "either COLOR::RED or COLOR::BLUE." << endl;
+        "either COLOR::BLUE or COLOR::RED." << endl;
         return 2;
     }
     int i = getNode(x, y);
@@ -85,10 +85,10 @@ int HexBoard::player_move(COLOR player, int x, int y) {
         
     // add this hexagon to player's open set
     int dist;
-    if(player==COLOR::RED)
-        dist = getX(i);
-    else if(player==COLOR::BLUE)
+    if(player==COLOR::BLUE)
         dist = getY(i);
+    else if(player==COLOR::RED)
+        dist = getX(i);
     open[player].insert(make_pair(dist, i));
     
     return 0;
@@ -97,7 +97,7 @@ int HexBoard::player_move(COLOR player, int x, int y) {
 bool HexBoard::player_won(COLOR player) {
     bool won = false;
     // move player owned nodes (in open set) with coordinate 0
-    // (x=0 for RED; y=0 for BLUE) to its closed set
+    // (y=0 for BLUE; x=0 for RED) to its closed set
     for(auto it=open[player].begin(); it!=open[player].end(); ) {
         if(it->first==0) {
             closed[player].insert(it->second);
@@ -122,15 +122,15 @@ bool HexBoard::player_won(COLOR player) {
         else
             ++it;
     }
-    // player won if find any node with x=N-1 for RED
-    // or y=N-1 for BLUE in closed set
+    // player won if find any node with y=N-1 for BLUE
+    // or x=N-1 for RED in closed set
     set<int>::iterator it_farside;
-    if(player==COLOR::RED)
-        it_farside = find_if(closed[player].begin(),closed[player].end(),
-                            [&](int i){return this->getX(i)==N-1;});
-    else if(player==COLOR::BLUE)
+    if(player==COLOR::BLUE)
         it_farside = find_if(closed[player].begin(),closed[player].end(),
                             [&](int i){return this->getY(i)==N-1;});
+    else if(player==COLOR::RED)
+        it_farside = find_if(closed[player].begin(),closed[player].end(),
+                            [&](int i){return this->getX(i)==N-1;});
     
     if(it_farside!=closed[player].end())
         won = true;
@@ -171,9 +171,9 @@ void HexBoard::draw() {
             int node = getNode(x, y);
             if(col[node]==COLOR::WHITE)
                 cout << " . ";
-            else if(col[node]==COLOR::RED)
-                cout << " X ";
             else if(col[node]==COLOR::BLUE)
+                cout << " X ";
+            else if(col[node]==COLOR::RED)
                 cout << " O ";
             if(y!=N-1) cout << "-";
         }
