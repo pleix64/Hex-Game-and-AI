@@ -44,7 +44,8 @@ void GamePlay::initialize() {
     //cout << "test: game mode is set to " << game_mode << endl;
     
     human_player = 1;
-    cout << "Player 1 (BLUE) goes first, then Player 2 (RED).\n";
+    cout << "Player 1 (BLUE, X), aiming at connecting Left and Right sides, goes first;\n";
+    cout << "Player 2 (RED, O), aiming at connecting Up and Down sides, goes second.\n";
     if(game_mode==1) { // H vs C
         cout << "Choose your player (enter 1 or 2):";
         if(cin.peek()!='\n')
@@ -60,9 +61,9 @@ void GamePlay::initialize() {
     
     if(game_mode==1) {
         if(human_player==1)
-            cout << "You play BLUE and go first.\n";
+            cout << "You play BLUE (X) and go first.\n";
         else
-            cout << "You play RED. Computer goes first.\n";
+            cout << "You play RED (O). Computer goes first.\n";
     }
     else if(game_mode==2)
         cout << "Two human players take turns.\n";
@@ -138,7 +139,10 @@ void GamePlay::game_flow() {
                 generate_move(x, y);
             }
             // validate the move
-            if(hex->player_move(current_turn, x, y)) {
+            bool swap_is_on = false;
+            if(current_turn==COLOR::RED && turns[1]==0)
+                swap_is_on = true;
+            if(hex->player_move(current_turn, x, y, swap_is_on)) {
                 valid_input = false;
                 if(human_play_now)
                     cout << "Illegal move. \nPlease select an available location.\n";
@@ -158,7 +162,7 @@ void GamePlay::game_flow() {
         take_turns();
     }
     
-    cout << "Winner is " << winner << ".\n";
+    cout << "Winner is Player " << int(winner) << " (" << winner << ").\n";
     cout << "Total turns: " << (turns[0]+turns[1]);
     cout << " (BLUE " << turns[0] << ", RED " << turns[1] << ").\n";
     

@@ -60,7 +60,7 @@ bool HexBoard::adjacent(int i, int j) {
 }
 
 
-int HexBoard::player_move(COLOR player, int x, int y) {
+int HexBoard::player_move(COLOR player, int x, int y, bool swap_on) {
     if(player==COLOR::WHITE) {
         cout << "Player's color must be "
         "either COLOR::BLUE or COLOR::RED." << endl;
@@ -68,8 +68,12 @@ int HexBoard::player_move(COLOR player, int x, int y) {
     }
     int i = getNode(x, y);
     // legal move
-    if(x>=0 && x<N && y>=0 && y<N && col[i]==COLOR::WHITE)
-        col[i] = player;
+    if(x>=0 && x<N && y>=0 && y<N) {
+        if(col[i]==COLOR::WHITE || swap_on)
+            col[i] = player;
+        else
+            return 1;
+    }
     else 
         return 1;
     

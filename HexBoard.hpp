@@ -62,7 +62,7 @@ public:
     bool adjacent(int i, int j);
     // test whether there is an edge from node i to node j
     
-    int player_move(COLOR player, int x, int y);
+    int player_move(COLOR player, int x, int y, bool swap_on=false);
     // assign the hexagon (x,y) with COLOR player (BLUE or RED)
     // ensure it is a legal move (not already occupied and in board range)
     // change edge color accordingly if neighbor nodes have the same color
