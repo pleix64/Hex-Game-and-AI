@@ -1,6 +1,6 @@
 //
 //  GamePlay.cpp
-//  hw4_Hex_basic
+//  Hex_game
 //
 //  Created by Yu Chen on 1/29/22.
 //  Copyright © 2022 Yu Chen. All rights reserved.
@@ -107,7 +107,7 @@ void GamePlay::game_flow() {
         cout << "Error: wrong game mode. This message should never be printed.\n";
 
     bool won = false;
-    COLOR winner;
+    COLOR winner = COLOR::WHITE;
     while(!won) {
         // determine whether wait for keyboard input or generate from AI
         bool human_play_now = false;

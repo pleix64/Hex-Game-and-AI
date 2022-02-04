@@ -1,6 +1,6 @@
 //
 //  HexBoard.hpp
-//  hw4_Hex_basic
+//  Hex_game
 //
 /* *******************************************
 Coordinate convention in this program:
