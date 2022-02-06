@@ -38,6 +38,16 @@ public:
     
     ~HexBoard();
     
+    int getV() {
+        // get number of vertices (nodes)
+        return V;
+    }
+    
+    int getN() {
+        // get side length
+        return N;
+    }
+    
     int getX(int i) {
         return i / N;
     }
@@ -49,6 +59,17 @@ public:
     int getNode(int x, int y) {
         return x*N + y;
     }
+    
+    int getPlayerCoord(int i, COLOR player) {
+        return player==COLOR::RED ? getX(i) : getY(i);
+    }
+    
+    template <class InputIt>
+    void fill(InputIt first, InputIt last, COLOR curr=COLOR::BLUE);
+    // fill the HexBoard with a sequence of nodes
+    // color takes turns with BLUE first by default
+    // Can also be used to continue after last partial fill.
+    // In that case, should provide starting color.
     
     void add_neighbor_safe(int i, int x, int y) {
         // add node (x,y) to i's neighbor safely
@@ -71,6 +92,10 @@ public:
     bool player_won(COLOR player);
     // test whether player won
     // call every time after this player moved
+    
+    bool player_win(COLOR player);
+    // test whether player will win at the endgame of a Monte Carlo sample
+    // call from the simulation HexBoard when the board is filled (a winner is guaranteed)
     
     void print();
     

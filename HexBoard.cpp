@@ -54,6 +54,21 @@ HexBoard::~HexBoard() {
     delete [] adj;
 }
 
+template <class InputIt>
+void HexBoard::fill(InputIt first, InputIt last, COLOR curr) {
+    if(curr==COLOR::WHITE) {
+        cout << "Current color have to be either BLUE or RED.\n";
+        return;
+    }
+    for (InputIt it=first; it!=last; ++it) {
+        col[*it] = curr;
+        if(curr==COLOR::BLUE)
+            curr = COLOR::RED;
+        else
+            curr = COLOR::BLUE;
+    }
+}
+
 bool HexBoard::adjacent(int i, int j) {
     auto it = adj[i].find(j);
     return it!=adj[i].end();
@@ -77,16 +92,6 @@ int HexBoard::player_move(COLOR player, int x, int y, bool swap_on) {
     else 
         return 1;
     
-    // if neighbor is already with the same color
-    // change the edge to this neighbor as the player's color
-    // FIXME: it may turn out that no need for edge COLOR
-    //for(auto it=adj[i].begin(); it!=adj[i].end(); ++it) {
-    //    if(col[it->first]==player) {
-    //        it->second = player;
-    //        adj[it->first][i] = player;
-    //    }
-    //}
-        
     // add this hexagon to player's open set
     int dist;
     if(player==COLOR::BLUE)
@@ -140,6 +145,46 @@ bool HexBoard::player_won(COLOR player) {
         won = true;
     
     return won;
+}
+
+bool HexBoard::player_win(COLOR player) {
+    set<pair<int,int>> _open;
+    set<int> _closed;
+    
+    // Initialize open set and closed set
+    // For player's associate coordinates (as y to BLUE)
+    // go over another coordinate (like x)
+    // with each node requiring player's coordinate==0 (one side)
+    for(int another=0; another<N; ++another) {
+        int node;
+        if(player==COLOR::BLUE)
+            node = getNode(another, 0);
+        else
+            node = getNode(0, another);
+        
+        if(col[node]==player) {
+            _closed.insert(node);
+            for(auto neighbor: adj[node]) {
+                if(col[neighbor]==player)
+                    _open.insert(make_pair(-getPlayerCoord(neighbor, player), neighbor));
+            }
+        }
+    }
+    
+    bool win = false;
+    while(!_open.empty() || !win) {
+        int node = _open.begin()->second;
+        _open.erase(_open.begin());
+        _closed.insert(node);
+        for(auto neighbor : adj[node]) {
+            if(col[neighbor]==player)
+                _open.insert(make_pair(-getPlayerCoord(neighbor, player), neighbor));
+        }
+        if(getPlayerCoord(node, player)==N-1)
+            win = true;
+    }
+    
+    return win;
 }
 
 void HexBoard::print() {
