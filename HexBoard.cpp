@@ -25,7 +25,16 @@ ostream& operator<<(ostream& out, const COLOR& color) {
         out << "WHIHE";
     return out;
 }
-
+/*
+void take_turns(COLOR& turn) {
+    if(turn==COLOR::BLUE)
+        turn = COLOR::RED;
+    else if(turn==COLOR::RED)
+        turn = COLOR::BLUE;
+    else
+        cout << "Error: current_turn is not properly initialized." << endl;
+}
+*/
 HexBoard::HexBoard(int size): N(size),V(size*size) {
     col = vector<COLOR>(V,COLOR::WHITE);
     adj = new set<int>[V];
@@ -53,7 +62,7 @@ HexBoard::HexBoard(int size): N(size),V(size*size) {
 HexBoard::~HexBoard() {
     delete [] adj;
 }
-
+/*
 template <class InputIt>
 void HexBoard::fill(InputIt first, InputIt last, COLOR curr) {
     if(curr==COLOR::WHITE) {
@@ -62,30 +71,28 @@ void HexBoard::fill(InputIt first, InputIt last, COLOR curr) {
     }
     for (InputIt it=first; it!=last; ++it) {
         col[*it] = curr;
-        if(curr==COLOR::BLUE)
-            curr = COLOR::RED;
-        else
-            curr = COLOR::BLUE;
+        take_turns(curr);
     }
 }
-
+*/
 bool HexBoard::adjacent(int i, int j) {
     auto it = adj[i].find(j);
     return it!=adj[i].end();
 }
 
 
-int HexBoard::player_move(COLOR player, int x, int y, bool swap_on) {
+int HexBoard::player_move(COLOR player, int node, bool swap_on) {
     if(player==COLOR::WHITE) {
         cout << "Player's color must be "
         "either COLOR::BLUE or COLOR::RED." << endl;
         return 2;
     }
-    int i = getNode(x, y);
     // legal move
+    int x = getX(node);
+    int y = getY(node);
     if(x>=0 && x<N && y>=0 && y<N) {
-        if(col[i]==COLOR::WHITE || swap_on)
-            col[i] = player;
+        if(col[node]==COLOR::WHITE || swap_on)
+            col[node] = player;
         else
             return 1;
     }
@@ -95,10 +102,10 @@ int HexBoard::player_move(COLOR player, int x, int y, bool swap_on) {
     // add this hexagon to player's open set
     int dist;
     if(player==COLOR::BLUE)
-        dist = getY(i);
+        dist = getY(node);
     else if(player==COLOR::RED)
-        dist = getX(i);
-    open[player].insert(make_pair(dist, i));
+        dist = getX(node);
+    open[player].insert(make_pair(dist, node));
     
     return 0;
 }
@@ -165,19 +172,19 @@ bool HexBoard::player_win(COLOR player) {
         if(col[node]==player) {
             _closed.insert(node);
             for(auto neighbor: adj[node]) {
-                if(col[neighbor]==player)
+                if(col[neighbor]==player && _closed.find(neighbor)==_closed.end())
                     _open.insert(make_pair(-getPlayerCoord(neighbor, player), neighbor));
             }
         }
     }
     
     bool win = false;
-    while(!_open.empty() || !win) {
+    while(!_open.empty() && !win) {
         int node = _open.begin()->second;
         _open.erase(_open.begin());
         _closed.insert(node);
         for(auto neighbor : adj[node]) {
-            if(col[neighbor]==player)
+            if(col[neighbor]==player && _closed.find(neighbor)==_closed.end())
                 _open.insert(make_pair(-getPlayerCoord(neighbor, player), neighbor));
         }
         if(getPlayerCoord(node, player)==N-1)

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <random>
 #include "HexBoard.hpp"
+#include "HexAIMC.hpp"
 
 using namespace std;
 
@@ -24,14 +25,7 @@ public:
         
     }
     void initialize();
-    void take_turns() {
-        if(current_turn==COLOR::BLUE)
-            current_turn = COLOR::RED;
-        else if(current_turn==COLOR::RED)
-            current_turn = COLOR::BLUE;
-        else
-            cout << "Error: current_turn is not properly initialized." << endl;
-    }
+    
     void game_flow();
     // control game flow according to settngs (game_mode and human_player)
     // basic loop:
@@ -39,7 +33,7 @@ public:
     // if computer, generate a reasonable move
     // hex->player_move(current_turn, x, y);
     // if(hex->player_won(current_turn) ...;
-    // take_turns();
+    // take_turns
     
     void generate_move(int&x, int&y);
     
@@ -47,6 +41,8 @@ private:
     COLOR current_turn;
     vector<int> turns; // num of turns for BLUE and RED respectively
     HexBoard * hex; // HexBoard that GamePlay talks to
+    HexAIMC * ai;
+    
     
     int board_size;
     int game_mode;

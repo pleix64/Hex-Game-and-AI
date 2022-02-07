@@ -74,6 +74,14 @@ void GamePlay::initialize() {
     hex = new HexBoard(board_size);
     current_turn = COLOR::BLUE;
     hex->draw();
+    if(game_mode==1) {
+        if(human_player==1)
+            ai = new HexAIMC(hex,COLOR::RED);
+        else
+            ai = new HexAIMC(hex,COLOR::BLUE);
+    }
+    else if(game_mode==3)
+        ai = new HexAIMC(hex);
 }
 
 void GamePlay::game_flow() {
@@ -84,7 +92,7 @@ void GamePlay::game_flow() {
     // make a move, and check its validity
     // check if current player has won
     // draw the Hex board
-    // take_turns();
+    // take_turns
     
     bool P1_is_human = false, P2_is_human = false;
     if(game_mode==1) {
@@ -108,6 +116,7 @@ void GamePlay::game_flow() {
 
     bool won = false;
     COLOR winner = COLOR::WHITE;
+    int move, last_move=-1;
     while(!won) {
         // determine whether wait for keyboard input or generate from AI
         bool human_play_now = false;
@@ -128,21 +137,23 @@ void GamePlay::game_flow() {
         do{
             // keyboard input for human player,
             // or move generator for computer player
-            int x,y;
             if(human_play_now){
                 cout << "Player " << int(current_turn) << ", Enter your move (x y):";
+                int x,y;
                 cin >> x >> y;
+                move = hex->getNode(x, y);
             }
             else {
                 if(valid_input)
                     cout << "Player " << int(current_turn) << " move:\n";
-                generate_move(x, y);
+                //generate_move(x, y);
+                move = ai->best_move(last_move);
             }
             // validate the move
             bool swap_is_on = false;
             if(current_turn==COLOR::RED && turns[1]==0)
                 swap_is_on = true;
-            if(hex->player_move(current_turn, x, y, swap_is_on)) {
+            if(hex->player_move(current_turn, move, swap_is_on)) {
                 valid_input = false;
                 if(human_play_now)
                     cout << "Illegal move. \nPlease select an available location.\n";
@@ -159,7 +170,8 @@ void GamePlay::game_flow() {
             turns[1]++;
         
         hex->draw();
-        take_turns();
+        last_move = move;
+        take_turns(current_turn);
     }
     
     cout << "Winner is Player " << int(winner) << " (" << winner << ").\n";

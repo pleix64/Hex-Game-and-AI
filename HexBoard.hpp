@@ -32,6 +32,16 @@ enum class COLOR{WHITE=0, BLUE, RED};
 
 ostream& operator<<(ostream& out, const COLOR& color);
 
+//void take_turns(COLOR& turn);
+inline void take_turns(COLOR& turn) {
+    if(turn==COLOR::BLUE)
+        turn = COLOR::RED;
+    else if(turn==COLOR::RED)
+        turn = COLOR::BLUE;
+    else
+        cout << "Error: current_turn is not properly initialized." << endl;
+}
+
 class HexBoard {
 public:
     HexBoard(int size);
@@ -64,8 +74,20 @@ public:
         return player==COLOR::RED ? getX(i) : getY(i);
     }
     
+    //template <class InputIt>
+    //void fill(InputIt first, InputIt last, COLOR curr=COLOR::BLUE);
     template <class InputIt>
-    void fill(InputIt first, InputIt last, COLOR curr=COLOR::BLUE);
+    void fill(InputIt first, InputIt last, COLOR curr=COLOR::BLUE) {
+        if(curr==COLOR::WHITE) {
+            cout << "Current color have to be either BLUE or RED.\n";
+            return;
+        }
+        for (InputIt it=first; it!=last; ++it) {
+            col[*it] = curr;
+            take_turns(curr);
+        }
+    }
+
     // fill the HexBoard with a sequence of nodes
     // color takes turns with BLUE first by default
     // Can also be used to continue after last partial fill.
@@ -83,7 +105,7 @@ public:
     bool adjacent(int i, int j);
     // test whether there is an edge from node i to node j
     
-    int player_move(COLOR player, int x, int y, bool swap_on=false);
+    int player_move(COLOR player, int node, bool swap_on=false);
     // assign the hexagon (x,y) with COLOR player (BLUE or RED)
     // ensure it is a legal move (not already occupied and in board range)
     // change edge color accordingly if neighbor nodes have the same color
