@@ -25,16 +25,7 @@ ostream& operator<<(ostream& out, const COLOR& color) {
         out << "WHIHE";
     return out;
 }
-/*
-void take_turns(COLOR& turn) {
-    if(turn==COLOR::BLUE)
-        turn = COLOR::RED;
-    else if(turn==COLOR::RED)
-        turn = COLOR::BLUE;
-    else
-        cout << "Error: current_turn is not properly initialized." << endl;
-}
-*/
+
 HexBoard::HexBoard(int size): N(size),V(size*size) {
     col = vector<COLOR>(V,COLOR::WHITE);
     adj = new set<int>[V];
@@ -62,19 +53,7 @@ HexBoard::HexBoard(int size): N(size),V(size*size) {
 HexBoard::~HexBoard() {
     delete [] adj;
 }
-/*
-template <class InputIt>
-void HexBoard::fill(InputIt first, InputIt last, COLOR curr) {
-    if(curr==COLOR::WHITE) {
-        cout << "Current color have to be either BLUE or RED.\n";
-        return;
-    }
-    for (InputIt it=first; it!=last; ++it) {
-        col[*it] = curr;
-        take_turns(curr);
-    }
-}
-*/
+
 bool HexBoard::adjacent(int i, int j) {
     auto it = adj[i].find(j);
     return it!=adj[i].end();
@@ -100,16 +79,17 @@ int HexBoard::player_move(COLOR player, int node, bool swap_on) {
         return 1;
     
     // add this hexagon to player's open set
+    /*
     int dist;
     if(player==COLOR::BLUE)
         dist = getY(node);
     else if(player==COLOR::RED)
         dist = getX(node);
     open[player].insert(make_pair(dist, node));
-    
+    */
     return 0;
 }
-
+/*
 bool HexBoard::player_won(COLOR player) {
     bool won = false;
     // move player owned nodes (in open set) with coordinate 0
@@ -153,7 +133,7 @@ bool HexBoard::player_won(COLOR player) {
     
     return won;
 }
-
+*/
 bool HexBoard::player_win(COLOR player) {
     set<pair<int,int>> _open;
     set<int> _closed;
@@ -202,9 +182,6 @@ void HexBoard::print() {
             cout << (*it);
             if(col[*it]!=COLOR::WHITE)
                 cout << "(" << col[*it] << ")";
-            //cout << it->first;
-            //if(it->second!=COLOR::WHITE)
-            //    cout << "(" << it->second << ")";
             cout << ", ";
         }
         cout << endl;

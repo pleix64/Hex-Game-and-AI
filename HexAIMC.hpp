@@ -16,7 +16,7 @@
 
 using namespace std;
 
-const int num_trials = 1000;
+const int num_trials = 50;
 
 class HexAIMC {
 public:
@@ -27,15 +27,6 @@ public:
     ~HexAIMC();
     
     int best_move(int opp_last);
-    // the evaluation of best move
-    // what you need to do is for every turn,
-    // given current color and opponent's last move,
-    // simulate the rest of game for every available move for 1000 times,
-    // and estimate each win-loss rate (or loss-win rate since the ordering
-    // is by default ascending)
-    //
-    // past_moves and empty_nodes keep track of the actual game state
-    // 
     
 private:
     const COLOR ai_color; // the color AI plays for.

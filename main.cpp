@@ -17,8 +17,6 @@
 
 using namespace std;
 
-default_random_engine shfl_gen1(static_cast<unsigned>(time(0)));
-
 int main(int argc, const char * argv[]) {
     
     // test fill and player_win
@@ -41,6 +39,201 @@ int main(int argc, const char * argv[]) {
     GamePlay gp;
     gp.initialize();
     gp.game_flow();
+    
+    /*
+    HexBoard hb(9);
+    
+    int n = hb.getNode(5, 3);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(4, 5);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(3, 5);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(3, 7);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+
+    n = hb.getNode(3, 6);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+
+    n = hb.getNode(2, 7);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(4, 6);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(4, 8);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(4, 7);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(3, 8);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(5, 7);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(5, 8);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(6, 7);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(6, 8);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(7, 7);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(7, 8);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(8, 8);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(8, 7);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+
+    n = hb.getNode(1, 7);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(2, 6);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(1, 6);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(2, 5);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(1, 5);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(3, 4);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(1, 8);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(3, 3);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(2, 4);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(3, 2);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(2, 3);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(2, 2);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "winner.\n";
+    
+    n = hb.getNode(1, 3);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(1, 2);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    n = hb.getNode(0, 3);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    n = hb.getNode(0, 1);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "winner.\n";
+    
+    n = hb.getNode(0, 0);
+    hb.player_move(COLOR::BLUE, n);
+    if(hb.player_win(COLOR::BLUE))
+        cout << "winner.\n";
+    
+    // key moment
+    n = hb.getNode(0, 2);
+    hb.player_move(COLOR::RED, n);
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+    
+    //n = hb.getNode(1, 1);
+    //hb.player_move(COLOR::BLUE, n);
+    
+    //n = hb.getNode(1, 0);
+    //hb.player_move(COLOR::RED, n);
+    
+    hb.draw();
+    if(hb.player_win(COLOR::RED))
+        cout << "RED is winner.\n";
+*/
     
     return 0;
 }

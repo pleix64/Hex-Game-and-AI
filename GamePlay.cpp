@@ -162,7 +162,7 @@ void GamePlay::game_flow() {
                 valid_input = true;
         }while(!valid_input);
         
-        won = hex->player_won(current_turn);
+        won = hex->player_win(current_turn); // original: player_won
         if(won) winner = current_turn;
         if(current_turn==COLOR::BLUE)
             turns[0]++;
@@ -180,6 +180,7 @@ void GamePlay::game_flow() {
     
 }
 
+// deprecate 
 default_random_engine rand_gen(static_cast<unsigned>(time(0)));
 
 void GamePlay::generate_move(int&x, int&y) {

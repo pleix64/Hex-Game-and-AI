@@ -32,7 +32,6 @@ enum class COLOR{WHITE=0, BLUE, RED};
 
 ostream& operator<<(ostream& out, const COLOR& color);
 
-//void take_turns(COLOR& turn);
 inline void take_turns(COLOR& turn) {
     if(turn==COLOR::BLUE)
         turn = COLOR::RED;
@@ -74,10 +73,12 @@ public:
         return player==COLOR::RED ? getX(i) : getY(i);
     }
     
-    //template <class InputIt>
-    //void fill(InputIt first, InputIt last, COLOR curr=COLOR::BLUE);
     template <class InputIt>
     void fill(InputIt first, InputIt last, COLOR curr=COLOR::BLUE) {
+        // fill the HexBoard with a sequence of nodes
+        // color takes turns with BLUE first by default
+        // Can also be used to continue after last partial fill.
+        // In that case, should provide starting color.
         if(curr==COLOR::WHITE) {
             cout << "Current color have to be either BLUE or RED.\n";
             return;
@@ -88,10 +89,6 @@ public:
         }
     }
 
-    // fill the HexBoard with a sequence of nodes
-    // color takes turns with BLUE first by default
-    // Can also be used to continue after last partial fill.
-    // In that case, should provide starting color.
     
     void add_neighbor_safe(int i, int x, int y) {
         // add node (x,y) to i's neighbor safely
@@ -129,11 +126,11 @@ private:
     vector<COLOR> col; // node values of COLOR
     set<int> *adj; // adjancency list, no weight or color value needed. 
     //map<int,COLOR> * adj; // adjancency list, edge value is COLOR
-    map<COLOR,set<pair<int,int> > > open; // each player's open set
+    //map<COLOR,set<pair<int,int> > > open; // each player's open set
     // each element in open set is a pair of node index (second)
     // and its distance to North or West Side (first)
     // once a hexagon is occupied, first add it to player's open set
-    map<COLOR,set<int>> closed; // each player's closed set
+    //map<COLOR,set<int>> closed; // each player's closed set
     // 1. add player owned nodes on North Side (BLUE) or West Side (RED),
     // 2. move open set elements which are closed set elements' neighbors
     //    to closed set
