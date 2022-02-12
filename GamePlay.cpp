@@ -184,7 +184,6 @@ void GamePlay::game_flow() {
 default_random_engine rand_gen(static_cast<unsigned>(time(0)));
 
 void GamePlay::generate_move(int&x, int&y) {
-    // tyr a trivial simple strategy first--random
     uniform_int_distribution<int> coord(0,board_size-1);
     x = coord(rand_gen);
     y = coord(rand_gen);

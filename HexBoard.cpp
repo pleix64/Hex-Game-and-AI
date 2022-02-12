@@ -78,62 +78,9 @@ int HexBoard::player_move(COLOR player, int node, bool swap_on) {
     else 
         return 1;
     
-    // add this hexagon to player's open set
-    /*
-    int dist;
-    if(player==COLOR::BLUE)
-        dist = getY(node);
-    else if(player==COLOR::RED)
-        dist = getX(node);
-    open[player].insert(make_pair(dist, node));
-    */
-    return 0;
+     return 0;
 }
-/*
-bool HexBoard::player_won(COLOR player) {
-    bool won = false;
-    // move player owned nodes (in open set) with coordinate 0
-    // (y=0 for BLUE; x=0 for RED) to its closed set
-    for(auto it=open[player].begin(); it!=open[player].end(); ) {
-        if(it->first==0) {
-            closed[player].insert(it->second);
-            it = open[player].erase(it);
-        }
-        else
-            break;
-    }
-    // move open set elements which are closed set elements' neighbors
-    // to closed set
-    auto it=open[player].begin();
-    while(it!=open[player].end()) {
-        //find_if(closed[player].begin(),closed[player].end(),
-        //        bind(adjacent(_1, it->second)));
-        auto it_adj =
-        find_if(closed[player].begin(),closed[player].end(),
-                [&](int x) {return this->adjacent(x, it->second);});
-        if(it_adj!=closed[player].end()) {
-            closed[player].insert(it->second);
-            it = open[player].erase(it);
-        }
-        else
-            ++it;
-    }
-    // player won if find any node with y=N-1 for BLUE
-    // or x=N-1 for RED in closed set
-    set<int>::iterator it_farside;
-    if(player==COLOR::BLUE)
-        it_farside = find_if(closed[player].begin(),closed[player].end(),
-                            [&](int i){return this->getY(i)==N-1;});
-    else if(player==COLOR::RED)
-        it_farside = find_if(closed[player].begin(),closed[player].end(),
-                            [&](int i){return this->getX(i)==N-1;});
-    
-    if(it_farside!=closed[player].end())
-        won = true;
-    
-    return won;
-}
-*/
+
 bool HexBoard::player_win(COLOR player) {
     set<pair<int,int>> _open;
     set<int> _closed;

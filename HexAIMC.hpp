@@ -27,7 +27,19 @@ public:
     ~HexAIMC();
     
     int best_move(int opp_last);
-    // 
+    // Use Monte Carlo method to evaluate the best move
+    // Argument: the opponent last move
+    // Pass a negative int if there is no opponent last move
+    // (when evaluating the first move of the game)
+    // It samples the sequence of nodes as the moves of
+    // the rest course of a game from the current move to the end,
+    // then calculate the win-loss-rate (WLR) of each different
+    // available node for the current move. It picks the node
+    // with the largest WLR to be the best choice of current move.
+    // The algorithm is extended to include the swap rule (pie rule) case.
+    // It can decide a reasonable first move when AI goes first
+    // (avoid from being too good to be taken over by opponent),
+    // and can decide whether to take over the first move node when AI goes second.
     
 private:
     const COLOR ai_color; // the color AI plays for. WHITE means playing for both sides
