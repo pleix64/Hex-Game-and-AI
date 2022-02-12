@@ -190,6 +190,7 @@ void HexBoard::print() {
 
 void HexBoard::draw() {
     string ws("  ");
+    string sws(" ");
 
     cout << " ";
     for(int y=0; y<N; y++) {
@@ -198,7 +199,10 @@ void HexBoard::draw() {
     cout << "\n";
     
     for(int x=0; x<N; x++) {
-        for (int u=0;u<x;u++) cout << ws;
+        for (int u=0;u<x;u++) {
+            if(u<9) cout << ws;
+            else cout << sws;
+        }
         cout << x;
         for(int y=0; y<N; y++) {
             int node = getNode(x, y);
