@@ -29,7 +29,10 @@ HexAIMC::~HexAIMC() {
     delete sim;
 }
 
-default_random_engine shfl_gen(static_cast<unsigned>(time(0)));
+default_random_engine shfl_gen(static_cast<unsigned>(time(0))); // random engine for shuffle
+default_random_engine uni_gen(static_cast<unsigned>(time(0)));
+uniform_int_distribution<int> zeroone(0,1);
+auto half = bind(zeroone,uni_gen); // functor to generate 0 or 1 with a half/half probability
 
 int HexAIMC::best_move(int opp_last) {
     
@@ -41,27 +44,39 @@ int HexAIMC::best_move(int opp_last) {
     vector<int> wins(V,0), total(V,0); // wins and total count on each node for next move
     deque<int> mc_moves(empty_nodes.begin(),empty_nodes.end());
     for(int i=0; i<num_trials*empty_nodes.size(); ++i) {
-        // FIXME:: add pie rule move later
         shuffle(mc_moves.begin(), mc_moves.end(),shfl_gen);
+        
+        bool swapped = false;
+        if(past_moves.size()==0 && half()==1) {
+            int first_move = mc_moves.front();
+            mc_moves.push_front(first_move);
+            swapped = true;
+        }
+        if(past_moves.size()==1 && half()==1) {
+            int first_move = past_moves.back();
+            mc_moves.push_front(first_move);
+            swapped = true;
+        }
+
         sim->fill(past_moves.begin(),past_moves.end());
         sim->fill(mc_moves.begin(),mc_moves.end(),current_color);
-        sim->draw();
+        
         if(sim->player_win(current_color))
-            wins[mc_moves[0]]++;
-        total[mc_moves[0]]++;
-        // FIXME: consider whether need to reset sim to all WHITE here
-        // in principle no need, but worth to check whether everything works correctly
-        // maybe use small board to test first.
+            wins[mc_moves.front()]++;
+        total[mc_moves.front()]++;
+        
+        if(swapped)
+            mc_moves.pop_front();
     }
   
-    cout << "WLR: ";
+    //cout << "WLR: ";
     set<pair<double, int>> WLR; // Win-Loss Rate is defined as wins/(wins+loss)
     for(int i=0; i<V; ++i) {
         double wlr = total[i]==0 ? 0.0 : static_cast<double>(wins[i])/total[i];
         WLR.insert(make_pair(-1* wlr, i));
-        cout << wlr << ", ";
+        //cout << wlr << ", ";
     }
-    cout << endl;
+    //cout << endl;
 
     int best = WLR.begin()->second;
     past_moves.push_back(best);

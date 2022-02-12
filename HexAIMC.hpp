@@ -16,7 +16,7 @@
 
 using namespace std;
 
-const int num_trials = 50;
+const int num_trials = 1000;
 
 class HexAIMC {
 public:
@@ -27,15 +27,14 @@ public:
     ~HexAIMC();
     
     int best_move(int opp_last);
+    // 
     
 private:
-    const COLOR ai_color; // the color AI plays for.
-                          // WHITE means playing for both sides
-    COLOR current_color; // FIXME: figure out whether really need this
-    // the actual color that takes turns if play for both sides
+    const COLOR ai_color; // the color AI plays for. WHITE means playing for both sides
+    COLOR current_color; // the actual color that takes turns if play for both sides
     int V; // number of Hex board nodes
     vector<int> past_moves;
-    set<int> empty_nodes; // booking the available nodes
+    set<int> empty_nodes; // the available nodes
     HexBoard* hex; // the HexBoard that AI plays on
     HexBoard* sim; // the HexBoard used for Monte Carlo simulations
 };
