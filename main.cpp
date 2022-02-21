@@ -10,11 +10,6 @@
 #include "HexBoard.hpp"
 #include "GamePlay.hpp"
 
-#include <deque>
-#include <algorithm>
-#include <random>
-#include <ctime>
-
 using namespace std;
 
 int main(int argc, const char * argv[]) {
